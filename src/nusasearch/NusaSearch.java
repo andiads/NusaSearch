@@ -30,7 +30,6 @@ public class NusaSearch {
     private ModelNasabah nsb;
     
     private boolean found;
-    private int charLength;
     
     public NusaSearch() {
         
@@ -92,7 +91,35 @@ public class NusaSearch {
     
     // MERGE SEARCH
     public ArrayList<ModelNasabah> doMergeSearch(ArrayList<ModelNasabah> obj, String category, String key) {
+        listNasabah = obj;
+        resultSearch = new ArrayList<ModelNasabah>();
+        int nasabahIndex = -1;
+        
+        int low = 0;
+        int high = listNasabah.size();
+        int mid = (low + high)/2;
+        
+        while((low<high) && 
+              (!startsWithIgnoreCase(listNasabah.get(mid).getNama(), key)))
+        {
+            if (startsWithIgnoreCase(listNasabah.get(mid).getNama(), key)) {
+                low = mid + 1;
+                //resultSearch.add(listNasabah.get(low));
+            } else {
+                high = mid - 1;
+                //resultSearch.add(listNasabah.get(high));
+            }
+            
+            mid = (low + high) / 2;
+            
+            if (low > high) {
+                nasabahIndex = mid;
+                resultSearch.add(listNasabah.get(nasabahIndex));
+            }
+        }
+        
         return listNasabah;
+        
     }
     
     // trying to create a startswith & endsWith check by ignoring the case sensitive 

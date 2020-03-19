@@ -31,7 +31,8 @@ public class Main {
         ArrayList<ModelNasabah> dataNasabah = new ArrayList<ModelNasabah>();
 
         ArrayList<ModelNasabah> linearSearch = new ArrayList<ModelNasabah>();
-
+        ArrayList<ModelNasabah> mergeSearch = new ArrayList<ModelNasabah>();
+        
         dataNasabah = nsc.getDbList();
 
         // tampilkan data table nasabah
@@ -72,6 +73,21 @@ public class Main {
             
         } else if (option == 2) {
 
+            System.out.println("==============Merge/Binary Search==============");
+            System.out.print("Inputkan nama nasabah yg dicari: ");
+            key = inputKey.nextLine();
+
+            // result utk linear search
+            System.out.println("==================result=================");
+            System.out.println("+ID\t|\tNAME\t\t|\tNIK\t\t|\tUSERNAME\t\t");
+            mergeSearch = nsc.doLinearSearch(dataNasabah, "name", key);
+            for (int i = 0; i < mergeSearch.size(); i++) {
+                System.out.println("+" + mergeSearch.get(i).getId()
+                        + "\t|" + mergeSearch.get(i).getNama()
+                        + "\t\t\t|" + mergeSearch.get(i).getNik()
+                        + "\t\t|" + mergeSearch.get(i).getUsername());
+            }
+            
         } else {
             System.out.println("UNKNOWN OPTION");
         }
