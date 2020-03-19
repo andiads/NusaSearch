@@ -69,7 +69,8 @@ public class NusaSearch {
             
         } else if (category.equalsIgnoreCase("name")) {
             for (int i = 0; i < listNasabah.size(); i++) {
-                if (listNasabah.get(i).getNama().equalsIgnoreCase(key)){
+                //listNasabah.get(i).getNama().startsWith(key)
+                if (startsWithIgnoreCase(listNasabah.get(i).getNama(),key)){
                     found = true;
                     resultSearch.add(listNasabah.get(i));
                 }
@@ -83,7 +84,7 @@ public class NusaSearch {
         if (!found) { 
             System.out.println("---data not found----");
         } else {
-            System.out.println("----Data Found----");
+            //System.out.println("----Data Found----");
             return resultSearch;
         }
         return resultSearch;
@@ -94,11 +95,14 @@ public class NusaSearch {
         return listNasabah;
     }
     
-   // public boolean startWith(int charLength, String keyword){
-   //     this.charLength = charLength;
-
-        //if(keyword.substring(0,charLength-1);
-        
-       // return startWith;
-    //}
+    // trying to create a startswith & endsWith check by ignoring the case sensitive 
+    // based on javaString class startsWith() and equalIgnoeCase() methods
+    public static boolean startsWithIgnoreCase(String str, String prefix) {
+        return str.regionMatches(true, 0, prefix, 0, prefix.length());
+    }
+    
+    public static boolean endsWithIgnoreCase(String str, String suffix) {
+        int suffixLength = suffix.length();
+        return str.regionMatches(true, str.length() - suffixLength, suffix, 0, suffixLength);
+    }
 }
