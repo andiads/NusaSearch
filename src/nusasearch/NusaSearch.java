@@ -69,7 +69,7 @@ public class NusaSearch {
         } else if (category.equalsIgnoreCase("name")) {
             for (int i = 0; i < listNasabah.size(); i++) {
                 //listNasabah.get(i).getNama().startsWith(key)
-                if (startsWithIgnoreCase(listNasabah.get(i).getNama(),key)){
+                if (endsWithIgnoreCase(listNasabah.get(i).getNama(),key)){
                     found = true;
                     resultSearch.add(listNasabah.get(i));
                 }
@@ -129,7 +129,22 @@ public class NusaSearch {
     }
     
     public static boolean endsWithIgnoreCase(String str, String suffix) {
-        int suffixLength = suffix.length();
-        return str.regionMatches(true, str.length() - suffixLength, suffix, 0, suffixLength);
+       // int suffixLength = suffix.length();
+       // return str.regionMatches(true, str.length() - suffixLength, suffix, 0, suffixLength);
+       return endsWith(str, suffix, true);
+    }   
+    
+    
+    // got the refence from java2s.com 
+    // http://www.java2s.com/Tutorial/Java/0040__Data-Type/CaseinsensitivecheckifaStringendswithaspecifiedsuffix.htm
+    private static boolean endsWith(String str, String suffix, boolean ignoreCase) {
+        if (str == null || suffix == null) {
+          return (str == null && suffix == null);
+      }
+      if (suffix.length() > str.length()) {
+          return false;
+      }
+      int strOffset = str.length() - suffix.length();
+      return str.regionMatches(ignoreCase, strOffset, suffix, 0, suffix.length());
     }
 }

@@ -57,7 +57,7 @@ public class Main {
         if (option == 1) {
             
             System.out.println("==============Linear Search==============");
-            System.out.print("Inputkan nama nasabah yg dicari: ");
+            System.out.print("Inputkan nama (endsWith) nasabah yg dicari: ");
             key = inputKey.nextLine();
 
             // result utk linear search
@@ -74,7 +74,7 @@ public class Main {
         } else if (option == 2) {
 
             System.out.println("==============Merge/Binary Search==============");
-            System.out.print("Inputkan nama nasabah yg dicari: ");
+            System.out.print("Inputkan nama (startsWith) nasabah yg dicari: ");
             key = inputKey.nextLine();
 
             // result utk linear search
