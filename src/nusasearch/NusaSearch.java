@@ -20,13 +20,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.lang.reflect.Field;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class NusaSearch {
 
     private ArrayList<ModelNasabah> listNasabah;
+    private ArrayList<ModelNasabah> newList;
     private ArrayList<ModelNasabah> resultSearch;
+    private ArrayList<ModelNasabah> results;
     private ArrayList<Integer> listIndex;
 
     private ModelNasabah nsb;
@@ -36,7 +39,7 @@ public class NusaSearch {
     private final static int NOT_FOUND = -1;
 
     public NusaSearch() {
-
+        results = new ArrayList<ModelNasabah>();
     }
 
     // INITIALIZE TABLE NASABAH 
@@ -110,56 +113,45 @@ public class NusaSearch {
     }
 
     // BINARY/MERGE SEARCH
-    public void binarySearch(ArrayList<ModelNasabah> obj, String key){
-        listNasabah = doMergeSort(obj); // sort the list first
-        int index = -1;
-        int low = 0;
-        int high = listNasabah.size()-1;
-        int mid = (low + high) / 2;
-        
-        while(low <= high && (!startsWithIgnoreCase(listNasabah.get(mid).getNama(), key))){
-            if (listNasabah.get(mid).getNama().compareTo(key) < 0) {
-                low = mid + 1;
+    public ArrayList<ModelNasabah> getBinarySearch(ArrayList<ModelNasabah> obj, String key) {
+        listNasabah = obj;
+        resultSearch = new ArrayList<ModelNasabah>();
+
+        int index = binarySearch(listNasabah, key);
+
+        resultSearch.add(listNasabah.get(index));
+
+        return resultSearch;
+
+    }
+
+    public int binarySearch(ArrayList<ModelNasabah> obj, String key) {
+        ArrayList<ModelNasabah> list = new ArrayList<ModelNasabah>();
+        listIndex = new ArrayList<Integer>();
+        list = doMergeSort(obj);
+        //int index = -1;
+        int first = 0;
+        int last = obj.size() - 1;
+        int mid = 0;
+        String strName;
+        while (first <= last) {
+            mid = (first + last) / 2;
+            strName = list.get(mid).getNama();
+            int c = startsWithIgnoreCase(strName, key) ? 0 : key.compareToIgnoreCase(strName);
+            if (c > 0) {
+                first = mid + 1;
+            } else if (c == 0) {
+                //mid = (first + last) / 2;
+
+                return mid;
             } else {
-                high = mid - 1;
+                last = mid - 1;
             }
 
-            mid = (low + high) / 2;
+        }
 
-            if (low > high) {
-                mid = NOT_FOUND;
-            }
-            index = mid;
-        }
-        
-        // create list indexes
-        final ArrayList<Integer> indexes = new ArrayList<Integer>();
-        // add one we already found
-        indexes.add(index);
-        
-        // iterate upwards until we hit the end or a different value
-        int current = index + 1;
-        while (current < listNasabah.size() && startsWithIgnoreCase(listNasabah.get(current).getNama(),key)){
-            indexes.add(current);
-            current++;
-        }
-        
-        // iterate downwards until we hit the start or a different value
-        current = index - 1;
-        while(current >=0 && startsWithIgnoreCase(listNasabah.get(current).getNama(),key)) {
-            indexes.add(current);
-            current--;
-        }
-        
-        // sort the indexes 
-        Collections.sort(indexes);
-        
-        for (int idx : indexes) {
-            System.out.println("+" + listNasabah.get((idx+1)).getId()
-                + "\t|" + listNasabah.get((idx+1)).getNama()
-                + "\t\t\t|" + listNasabah.get((idx+1)).getNik()
-                + "\t\t|" + listNasabah.get((idx+1)).getUsername());
-        }
+        return mid;
+
     }
 
     // trying to create startswith & endsWith check by ignoring the case sensitive 
@@ -186,49 +178,49 @@ public class NusaSearch {
         int strOffset = str.length() - suffix.length();
         return str.regionMatches(ignoreCase, strOffset, suffix, 0, suffix.length());
     }
-    
-     // MERGE SORT (cc: https://www.codexpedia.com/java/java-merge-sort-implementation/)
+
+    // MERGE SORT (cc: https://www.codexpedia.com/java/java-merge-sort-implementation/)
     public ArrayList<ModelNasabah> doMergeSort(ArrayList<ModelNasabah> whole) {
         //listNasabah = whole;
         ArrayList<ModelNasabah> left = new ArrayList<ModelNasabah>();
         ArrayList<ModelNasabah> right = new ArrayList<ModelNasabah>();
         int center;
- 
-        if (whole.size() == 1) {    
+
+        if (whole.size() == 1) {
             return whole;
         } else {
-            center = whole.size()/2;
+            center = whole.size() / 2;
             // copy the left half of whole into the left.
-            for (int i=0; i<center; i++) {
-                    left.add(whole.get(i));
+            for (int i = 0; i < center; i++) {
+                left.add(whole.get(i));
             }
- 
+
             //copy the right half of whole into the new arraylist.
-            for (int i=center; i<whole.size(); i++) {
-                    right.add(whole.get(i));
+            for (int i = center; i < whole.size(); i++) {
+                right.add(whole.get(i));
             }
- 
+
             // Sort the left and right halves of the arraylist.
-            left  = doMergeSort(left);
+            left = doMergeSort(left);
             right = doMergeSort(right);
- 
+
             // Merge the results back together.
             merge(left, right, whole);
         }
         return whole;
     }
- 
+
     private void merge(ArrayList<ModelNasabah> left, ArrayList<ModelNasabah> right, ArrayList<ModelNasabah> whole) {
         //listNasabah = whole;
         int leftIndex = 0;
         int rightIndex = 0;
         int wholeIndex = 0;
- 
+
         // As long as neither the left nor the right ArrayList has
         // been used up, keep taking the smaller of left.get(leftIndex)
         // or right.get(rightIndex) and adding it at both.get(bothIndex).
         while (leftIndex < left.size() && rightIndex < right.size()) {
-            if ( (left.get(leftIndex).getNama().compareTo(right.get(rightIndex).getNama())) < 0) {
+            if ((left.get(leftIndex).getNama().compareTo(right.get(rightIndex).getNama())) < 0) {
                 whole.set(wholeIndex, left.get(leftIndex));
                 leftIndex++;
             } else {
@@ -237,7 +229,7 @@ public class NusaSearch {
             }
             wholeIndex++;
         }
- 
+
         ArrayList<ModelNasabah> rest;
         int restIndex;
         if (leftIndex >= left.size()) {
@@ -249,12 +241,71 @@ public class NusaSearch {
             rest = left;
             restIndex = leftIndex;
         }
- 
+
         // Copy the rest of whichever ArrayList (left or right) was not used up.
-        for (int i=restIndex; i<rest.size(); i++) {
+        for (int i = restIndex; i < rest.size(); i++) {
             whole.set(wholeIndex, rest.get(i));
             wholeIndex++;
         }
     }
     
+    
+    // UNUSED / CURRENTLY DIDN'T WORK / EXPERIMENTAL BINARY SEARCH METHOD TO SHOW MULTIPLE MATCHES DATA
+    public ArrayList<ModelNasabah> searchNama(ArrayList<ModelNasabah> list, String key) {
+        newList = new ArrayList<ModelNasabah>();
+        listNasabah = doMergeSort(list);
+        //int index = -1;
+        int first = 0;
+        int last = listNasabah.size() - 1;
+        int mid = 0;
+        String strName;
+        while (first <= last) {
+            mid = (first + last) / 2;
+            strName = listNasabah.get(mid).getNama();
+            int c = startsWithIgnoreCase(strName, key) ? 0 : key.compareToIgnoreCase(strName);
+            if (c > 0) {
+                last = mid - 1;
+            } else if (c < 0) {
+                //newList.add(listNasabah.get(mid));
+                first = mid + 1;
+            } else {
+                newList.add(listNasabah.get(mid));
+                last = mid - 1;
+            }
+            //last = mid - 1;
+            
+        }
+
+        if (newList.size() > 0) {
+            resultSearch = new ArrayList<ModelNasabah>();
+            for (int i = 0; i < newList.size(); i++) {
+                resultSearch.add(newList.get(i));
+
+            }
+            return resultSearch;
+        } else {
+            resultSearch = null;
+            return resultSearch;
+        }
+    }
+
+    public void showBinarySearch(ArrayList<ModelNasabah> results) {
+        System.out.println("==================result=================");
+        System.out.println("+ID\t|\tNAME\t\t|\tNIK\t\t|\tUSERNAME\t\t");
+        
+        for (ModelNasabah mn : results) {
+            if (mn == null) {
+                System.out.println("___NOT FOUND___");
+            } else {
+
+                System.out.println("+" + mn.getId()
+                        + "\t|" + mn.getNama()
+                        + "\t\t\t|" + mn.getNik()
+                        + "\t\t|" + mn.getUsername());
+
+            }
+        }
+    }
+// END OF FILE
+
 }

@@ -23,7 +23,7 @@ public class Main {
         Scanner input = new Scanner(System.in);
         Scanner inputKey = new Scanner(System.in);
         Scanner inputCategory = new Scanner(System.in);
-        
+
         int option = 0;
         String key = "";
         String category = "";
@@ -31,7 +31,8 @@ public class Main {
         ArrayList<ModelNasabah> dataNasabah = new ArrayList<ModelNasabah>();
 
         ArrayList<ModelNasabah> linearSearch = new ArrayList<ModelNasabah>();
-  
+        ArrayList<ModelNasabah> mergeSearch = new ArrayList<ModelNasabah>();
+
         dataNasabah = nsc.getDbList();
 
         // tampilkan data table nasabah
@@ -51,10 +52,10 @@ public class Main {
         System.out.println("------------------------------------------");
         System.out.print("Masukkan pilihan (1/2) algoritma yg ingin digunakan: ");
         option = input.nextInt();
-        
+
         // opsi pencarian
         if (option == 1) {
-            
+
             System.out.println("==============Linear Search==============");
             System.out.print("Inputkan NIK (endsWith) nasabah yg dicari: ");
             key = inputKey.nextLine();
@@ -69,7 +70,7 @@ public class Main {
                         + "\t\t\t|" + linearSearch.get(i).getNik()
                         + "\t\t|" + linearSearch.get(i).getUsername());
             }
-            
+
         } else if (option == 2) {
 
             System.out.println("==============Merge/Binary Search==============");
@@ -77,10 +78,20 @@ public class Main {
             key = inputKey.nextLine();
 
             // result utk merge search
+            //nsc.binarySearch(dataNasabah, key);
+            mergeSearch = nsc.getBinarySearch(dataNasabah, key);
             System.out.println("==================result=================");
             System.out.println("+ID\t|\tNAME\t\t|\tNIK\t\t|\tUSERNAME\t\t");
+
+            for (int i = 0; i < mergeSearch.size();i++) {
+                System.out.println("+" + mergeSearch.get(i).getId()
+                        + "\t|" + mergeSearch.get(i).getNama()
+                        + "\t\t\t|" + mergeSearch.get(i).getNik()
+                        + "\t\t|" + mergeSearch.get(i).getUsername());
+            }
             
-            nsc.binarySearch(dataNasabah, key);
+            //mergeSearch = nsc.searchNama(dataNasabah, key);
+            //nsc.showBinarySearch(mergeSearch);
         } else {
             System.out.println("UNKNOWN OPTION");
         }
