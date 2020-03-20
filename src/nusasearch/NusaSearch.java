@@ -39,7 +39,7 @@ public class NusaSearch {
     private final static int NOT_FOUND = -1;
 
     public NusaSearch() {
-        results = new ArrayList<ModelNasabah>();
+
     }
 
     // INITIALIZE TABLE NASABAH 
